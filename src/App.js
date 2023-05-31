@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import UserProfile from './UserProfile';
 
+import { sql } from '@vercel/postgres';
+ 
+const likes = 100;
+const { rows, fields } = await sql`SELECT * FROM posts WHERE likes > ${likes};`;
+
 function App() {
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
