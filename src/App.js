@@ -6,6 +6,35 @@ function App() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
 
+const express = require('express');
+const { Pool } = require('pg');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+app.get('/api/users', (req, res) => {
+  pool.query('SELECT * FROM users', (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to retrieve users' });
+    } else {
+      res.json(results.rows);
+    }
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+  
   // Fetch all users
   useEffect(() => {
     fetch('/api/users') // replace with your API endpoint
